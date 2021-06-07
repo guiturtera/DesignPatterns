@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 namespace Factory_Method
 {
     // A factory method can simply be a static method, which has a method for the object construction
+    // Benefits:
+    // Improve code legibility
+    // It encapsulates some creational logic
 
     // Default Factory Method
     // It can also be an interface
@@ -23,39 +26,55 @@ namespace Factory_Method
         public string SatisfyHunger()
         {
             IFood food = FactoryMethod();
-            return String.Format($"Hmmm..., I'm starving!\n{food.Eat()}\nI am not starve anymore!");
+            return String.Format($"Hmmm..., I'm starving!\n{food.Eat()}\nNot starving anymore!");
         }
     }
 
-    public class HealthyFactory : AbsFoodFactory
+    public class HealthyFactory
+        : AbsFoodFactory
     {
         public override IFood FactoryMethod()
         {
-            return new Apple();
+            return new Apple(true);
         }
     }
 
-    public class DirtyFactory : AbsFoodFactory
+    public class FatFood : AbsFoodFactory
     {
         public override IFood FactoryMethod()
         {
-            return new Hamburguer();
+            return new Hamburguer(2, "XBurger");
         }
     }
 
     public class Apple : IFood
     {
+        bool green;
+        public Apple(bool green)
+        {
+            this.green = green;
+        }
+
         public string Eat()
         {
-            return "Eating apple...";
+            // Could also use an enum for that, but only for a matter of example
+            return $"Eating {(green ? "green" : "red")} apple...";
         }
     }
 
     public class Hamburguer : IFood
     {
+        string name;
+        int size;
+        public Hamburguer(int size, string name)
+        {
+            this.size = size;
+            this.name = name;
+        }
+
         public string Eat()
         {
-            return "Eating Hamburguer...";
+            return String.Format("Eating sized {0} {1} Hamburguer...", size, name);
         }
     }
 
@@ -69,7 +88,7 @@ namespace Factory_Method
         static void Main(string[] args)
         {
             var healthyFactory = new HealthyFactory();
-            var dirtyFood = new DirtyFactory();
+            var dirtyFood = new FatFood();
             // You can instantiate it here and get the food.
             Console.WriteLine(dirtyFood.SatisfyHunger());
             Console.WriteLine();
